@@ -54,3 +54,6 @@ Order history tracking
 Payment gateway integration
 Notifications for low stock
 Analytics and reports for admins
+
+<img width="1856" height="619" alt="image" src="https://github.com/user-attachments/assets/82716e89-a88c-46a1-9b35-eb9e9d212306" />
+
