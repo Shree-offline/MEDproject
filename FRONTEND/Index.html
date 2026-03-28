@@ -54,6 +54,29 @@
 
     // Run the function when the page opens
     getInventory();
+        async function restock() {
+    const password = document.getElementById("adminPass").value;
+    const item = document.getElementById("medName").value;
+    const quantity = document.getElementById("medQty").value;
+    const statusMsg = document.getElementById("statusMsg");
+
+    const response = await fetch(`${apiURL}/restock`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password, item, quantity })
+    });
+
+    const result = await response.json();
+    
+    if (response.ok) {
+        statusMsg.innerText = "Success: " + result.message;
+        statusMsg.style.color = "green";
+        getInventory(); // Refresh the list automatically!
+    } else {
+        statusMsg.innerText = "Error: " + result.message;
+        statusMsg.style.color = "red";
+    }
+}
 </script>
 
     <footer>
