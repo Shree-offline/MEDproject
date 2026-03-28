@@ -78,8 +78,46 @@
     }
 }
 </script>
+<script>
+    const apiURL = "https://medproject-5.onrender.com";
 
-    <footer>
+    // --- FUNCTION FOR THE USER PANEL (BUY) ---
+    async function buyMedicine() {
+        // This matches the IDs in your User Panel
+        const item = document.querySelector('.User-Panel input[type="text"]').value;
+        const qty = document.querySelector('.User-Panel input[type="number"]').value;
+
+        const response = await fetch(`${apiURL}/buy`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ medicine: item, quantity: qty })
+        });
+
+        const result = await response.json();
+        alert(result.message); // This will pop up and tell you if it worked!
+    }
+
+    // --- FUNCTION FOR THE ADMIN PANEL (RESTOCK) ---
+    async function restockMedicine() {
+        // This matches the IDs in your Admin Panel
+        const password = document.querySelector('.Admin-Panel input[type="password"]').value;
+        const item = document.querySelector('.Admin-Panel input[type="text"]').value;
+        const qty = document.querySelector('.Admin-Panel input[type="number"]').value;
+
+        const response = await fetch(`${apiURL}/restock`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ password: password, item: item, quantity: qty })
+        });
+
+        const result = await response.json();
+        alert(result.message);
+    }
+
+    // Connect the buttons to the functions
+    document.querySelector('.btn-buy').onclick = buyMedicine;
+    document.querySelector('.btn-restock').onclick = restockMedicine;
+</script>
         <p>© 2026 MEDD App | Inventory Management System</p>
     </footer>
 
