@@ -33,6 +33,29 @@
 
     </main>
 
+    <script>
+    // 1. The address of your live backend
+    const apiURL = "https://medproject-5.onrender.com"; 
+
+    // 2. Function to get inventory from the server
+    async function getInventory() {
+        try {
+            const response = await fetch(`${apiURL}/inventory`);
+            const data = await response.json();
+            console.log("Medicine Data:", data);
+            
+            // This part updates your HTML. 
+            // Make sure you have an element with id="display" in your HTML!
+            document.getElementById("display").innerHTML = JSON.stringify(data, null, 2);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    }
+
+    // Run the function when the page opens
+    getInventory();
+</script>
+
     <footer>
         <p>© 2026 MEDD App | Inventory Management System</p>
     </footer>
