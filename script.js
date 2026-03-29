@@ -1,44 +1,39 @@
-// Initialize stock from localStorage or set defaults
-let inventory = JSON.parse(localStorage.getItem('medStock')) || {
-    "Paracetamol": 0,
-    "Amoxicillin": 0
+// This replaces the Python backend by saving data in your browser's memory
+let stock = JSON.parse(localStorage.getItem('medStock')) || {
+    "Paracetamol": 50,
+    "Amoxicillin": 20
 };
 
 const ADMIN_PASSWORD = "shree123";
 
 function restockMedicine() {
-    const pass = document.getElementById('admin-pass').value;
-    const name = document.getElementById('admin-med-name').value;
-    const qty = parseInt(document.getElementById('admin-qty').value);
+    const password = document.getElementById("admin-pass").value;
+    const name = document.getElementById("admin-med-name").value;
+    const qty = parseInt(document.getElementById("admin-qty").value);
 
-    if (pass !== ADMIN_PASSWORD) {
-        alert("Incorrect Admin Password!");
+    if (password !== ADMIN_PASSWORD) {
+        alert("Invalid Admin Password!");
         return;
     }
 
     if (name && qty > 0) {
-        inventory[name] = (inventory[name] || 0) + qty;
-        saveAndRefresh();
-        alert(`${qty} units of ${name} added! Total: ${inventory[name]}`);
+        stock[name] = (stock[name] || 0) + qty;
+        localStorage.setItem('medStock', JSON.stringify(stock));
+        alert(`Success! ${name} stock is now ${stock[name]}`);
     } else {
-        alert("Please enter valid medicine name and quantity.");
+        alert("Please enter a valid name and quantity.");
     }
 }
 
 function buyMedicine() {
-    const name = document.getElementById('user-med-name').value;
-    const qty = parseInt(document.getElementById('user-qty').value);
+    const name = document.getElementById("user-med-name").value;
+    const qty = parseInt(document.getElementById("user-qty").value);
 
-    if (inventory[name] >= qty) {
-        inventory[name] -= qty;
-        saveAndRefresh();
-        alert(`Purchase successful! Remaining ${name}: ${inventory[name]}`);
+    if (stock[name] && stock[name] >= qty) {
+        stock[name] -= qty;
+        localStorage.setItem('medStock', JSON.stringify(stock));
+        alert(`Purchase Successful! Remaining ${name}: ${stock[name]}`);
     } else {
-        alert(`Insufficient stock! We only have ${inventory[name] || 0} left.`);
+        alert(`Stock unavailable! We only have ${stock[name] || 0} units.`);
     }
-}
-
-function saveAndRefresh() {
-    localStorage.setItem('medStock', JSON.stringify(inventory));
-    console.log("Current Inventory:", inventory);
 }
