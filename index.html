@@ -2,77 +2,45 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>MEDD App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEDproject Portal</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="container">
+        <h1>Welcome to MEDproject</h1>
+        <p>Please select your access level:</p>
+        
+        <div class="role-selection">
+            <button onclick="showCustomerView()" class="btn-customer">I am a Customer</button>
+            <button onclick="promptAdmin()" class="btn-admin">I am an Admin</button>
+        </div>
 
-    <header>
-        <h1>MEDD App</h1>
-        <p>Stock Management & Medicine Purchase System</p>
-    </header>
+        <div id="admin-login" style="display:none; margin-top: 20px;">
+            <input type="password" id="admin-pass" placeholder="Enter Admin Password">
+            <button onclick="loginAdmin()">Login</button>
+        </div>
+    </div>
 
-    <main class="container">
-
-        <!-- Admin Section -->
-        <section class="card">
-            <h2>Admin Panel</h2>
-            <input type="password" placeholder="Enter Admin Password">
-            <input type="text" placeholder="Medicine Name">
-            <input type="number" placeholder="Quantity">
-            <button class="btn admin">Restock Medicine</button>
-        </section>
-
-        <!-- User Section -->
-        <section class="card">
-            <h2>User Panel</h2>
-            <input type="text" placeholder="Medicine Name">
-            <input type="number" placeholder="Quantity">
-            <button class="btn user">Buy Medicine</button>
-        </section>
-
-    </main>
-<script>
-    const apiURL = "https://medproject-5.onrender.com";
-
-    // --- RESTOCK FUNCTION ---
-    async function handleRestock() {
-        const password = document.getElementById("adminPass").value;
-        const item = document.getElementById("adminItem").value;
-        const qty = document.getElementById("adminQty").value;
-
-        try {
-            const response = await fetch(`${apiURL}/restock`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ password, item, quantity: qty })
-            });
-            const data = await response.json();
-            alert(data.message);
-        } catch (err) {
-            alert("Error: Backend is sleeping or URL is wrong.");
+    <script>
+        function showCustomerView() {
+            window.location.href = "customer.html";
         }
-    }
 
-    // --- BUY FUNCTION ---
-    async function handleBuy() {
-        const item = document.getElementById("userItem").value;
-        const qty = document.getElementById("userQty").value;
-
-        try {
-            const response = await fetch(`${apiURL}/buy`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ medicine: item, quantity: qty })
-            });
-            const data = await response.json();
-            alert(data.message);
-        } catch (err) {
-            alert("Error: Check your internet or Render link.");
+        function promptAdmin() {
+            document.getElementById('admin-login').style.display = 'block';
         }
-    }
 
-    // --- CONNECT BUTTONS ---
-    document.getElementById("btn-restock").onclick = handleRestock;
-    document.getElementById("btn-buy").onclick = handleBuy;
-</script>
+        function loginAdmin() {
+            const pass = document.getElementById('admin-pass').value;
+            // SECURITY: In a real app, this is verified on the backend.
+            // For now, we'll use a simple check to redirect.
+            if (pass === "admin123") { 
+                window.location.href = "admin.html";
+            } else {
+                alert("Incorrect Password!");
+            }
+        }
+    </script>
+</body>
+</html>
