@@ -1,28 +1,65 @@
 import os
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='', static_folder='.')
 
-# SECURITY: Use an environment variable for the secret key in production
-# If not set, it defaults to a random string (useful for local dev)
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-key-placeholder-123')
+# SECURITY: Use an environment variable for the secret key.
+# On Render, add a 'SECRET_KEY' variable in the dashboard.
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-default-secure-string-123')
 
-# SECURITY: Restrict CORS to your frontend URL once deployed
-# For now, it stays as default, but you can change this to your Render URL later
+# Enable CORS for frontend interaction
 CORS(app)
 
-@app.route('/inventory', methods=['GET'])
+# ---------------------------------------------------------
+# ROUTING: SERVING THE UI
+# ---------------------------------------------------------
+
+@app.route('/')
+def index():
+    return send_from_directory('.', 'index.html')
+
+@app.route('/admin')
+def admin_page():
+    return send_from_directory('.', 'admin.html')
+
+@app.route('/customer')
+def customer_page():
+    return send_from_directory('.', 'customer.html')
+
+# ---------------------------------------------------------
+# API ENDPOINTS
+# ---------------------------------------------------------
+
+@app.route('/api/inventory', methods=['GET'])
 def get_inventory():
-    # In a real app, this data would come from a secure database
+    # Mock data - in a real app, this would come from a database
     stock = {
-        "Paracetamol": 50, 
-        "Amoxicillin": 20
+        "Paracetamol": 50,
+        "Amoxicillin": 20,
+        "Vitamin C": 100
     }
     return jsonify(stock)
 
+@app.route('/api/admin-login', methods=['POST'])
+def admin_login():
+    data = request.json
+    password = data.get('password')
+    
+    # SECURITY: Compare against an Environment Variable
+    # Set ADMIN_PASSWORD in your Render Dashboard
+    expected_password = os.environ.get('ADMIN_PASSWORD', 'admin123')
+    
+    if password == expected_password:
+        return jsonify({"status": "authorized"}), 200
+    else:
+        return jsonify({"status": "unauthorized"}), 401
+
+# ---------------------------------------------------------
+# EXECUTION
+# ---------------------------------------------------------
+
 if __name__ == "__main__":
-    # SECURITY: Render sets the PORT environment variable automatically
+    # Render uses the PORT environment variable. Default to 10000 for local testing.
     port = int(os.environ.get("PORT", 10000))
-    # '0.0.0.0' allows the app to be accessible within the Render container
     app.run(host='0.0.0.0', port=port)
