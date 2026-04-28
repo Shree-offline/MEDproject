@@ -3,33 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>MEDproject Portal</title>
     <link rel="stylesheet" href="style.css"> </head>
 <body>
-    <div class="container" style="max-width: 600px;">
-        <h2>Admin Inventory Management</h2>
-        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-            <input type="text" id="up-name" placeholder="Medicine Name">
-            <input type="number" id="up-qty" placeholder="New Stock Quantity">
-            <input type="number" id="up-price" placeholder="New Price ($)">
-            <button onclick="saveUpdate()">Update/Add Item</button>
-        </div>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Medicine</th>
-                    <th>Stock</th>
-                    <th>Price</th>
-                </tr>
-            </thead>
-            <tbody id="admin-table">
-                </tbody>
-        </table>
+    <div class="container">
+        <h1>🏥 MEDproject Portal</h1>
+        <p>Select your access level to continue</p>
+        <button onclick="location.href='customer.html'">Customer Entry</button>
+        <button class="secondary" onclick="document.getElementById('login').style.display='block'">Admin Login</button>
         
-        <button class="secondary" onclick="location.href='index.html'" style="margin-top: 20px;">Logout</button>
+        <div id="login" style="display:none; margin-top: 20px;">
+            <input type="password" id="admin-pass" placeholder="Enter Admin Password">
+            <button onclick="loginAdmin()">Confirm Login</button>
+        </div>
     </div>
     <script src="script.js"></script>
-    <script>loadAdminTable();</script>
 </body>
 </html>
