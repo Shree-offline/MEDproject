@@ -55,5 +55,4 @@ Payment gateway integration
 Notifications for low stock
 Analytics and reports for admins
 
-<img width="1856" height="619" alt="image" src="https://github.com/user-attachments/assets/82716e89-a88c-46a1-9b35-eb9e9d212306" />
-
+<img width="1846" height="850" alt="image" src="https://github.com/user-attachments/assets/b4cb73e5-138a-48f7-915e-81f2270056c5" />
