@@ -1,14 +1,35 @@
-<div class="container" style="max-width: 600px;">
-    <h2>Admin Inventory Management</h2>
-    <input type="text" id="up-name" placeholder="Med Name">
-    <input type="number" id="up-qty" placeholder="New Stock">
-    <input type="number" id="up-price" placeholder="New Price">
-    <button onclick="saveUpdate()">Update Item</button>
-    <table>
-        <thead><tr><th>Name</th><th>Stock</th><th>Price</th></tr></thead>
-        <tbody id="admin-table"></tbody>
-    </table>
-    <button class="secondary" onclick="location.href='index.html'">Logout</button>
-</div>
-<script src="script.js"></script>
-<script>loadAdminTable();</script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="style.css"> </head>
+<body>
+    <div class="container" style="max-width: 600px;">
+        <h2>Admin Inventory Management</h2>
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+            <input type="text" id="up-name" placeholder="Medicine Name">
+            <input type="number" id="up-qty" placeholder="New Stock Quantity">
+            <input type="number" id="up-price" placeholder="New Price ($)">
+            <button onclick="saveUpdate()">Update/Add Item</button>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Medicine</th>
+                    <th>Stock</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody id="admin-table">
+                </tbody>
+        </table>
+        
+        <button class="secondary" onclick="location.href='index.html'" style="margin-top: 20px;">Logout</button>
+    </div>
+    <script src="script.js"></script>
+    <script>loadAdminTable();</script>
+</body>
+</html>
