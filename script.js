@@ -1,6 +1,41 @@
 const API = "/api";
 
-// Portal Login
+// --- CUSTOMER LOGIC ---
+async function calculateTotal() {
+    const inputName = document.getElementById('med-select').value.trim();
+    const qty = parseFloat(document.getElementById('buy-qty').value);
+    const display = document.getElementById('price-display');
+
+    if (!inputName || !qty || qty <= 0) {
+        display.innerHTML = "Total: $0.00";
+        return;
+    }
+
+    try {
+        const res = await fetch(`${API}/inventory`);
+        const inventory = await res.json();
+
+        // Search case-insensitively
+        // This looks through the list and finds the first match regardless of capital letters
+        const medKey = Object.keys(inventory).find(
+            key => key.toLowerCase() === inputName.toLowerCase()
+        );
+
+        if (medKey) {
+            const item = inventory[medKey];
+            const total = item.price * qty;
+            display.innerHTML = `Total: $${total.toFixed(2)}`;
+            display.style.color = "#28a745"; // Make it green if found
+        } else {
+            display.innerHTML = "Medicine not found";
+            display.style.color = "#dc3545"; // Make it red if not found
+        }
+    } catch (err) {
+        console.error("Error fetching inventory:", err);
+    }
+}
+
+// --- ADMIN LOGIC ---
 async function loginAdmin() {
     const pass = document.getElementById('admin-pass').value;
     const res = await fetch(`${API}/admin-login`, {
@@ -12,31 +47,20 @@ async function loginAdmin() {
     else alert("Invalid Password");
 }
 
-// Customer: Calculate Total
-async function calculateTotal() {
-    const name = document.getElementById('med-select').value;
-    const qty = document.getElementById('buy-qty').value;
-    const res = await fetch(`${API}/inventory`);
-    const data = await res.json();
-    
-    if (data[name]) {
-        const total = data[name].price * qty;
-        document.getElementById('price-display').innerHTML = `Total: $${total.toFixed(2)}`;
-    }
-}
-
-// Admin: Load Table
 async function loadAdminTable() {
-    const res = await fetch(`${API}/inventory`);
-    const data = await res.json();
-    const table = document.getElementById('admin-table');
-    table.innerHTML = '';
-    for (const [name, info] of Object.entries(data)) {
-        table.innerHTML += `<tr><td>${name}</td><td>${info.stock}</td><td>$${info.price}</td></tr>`;
-    }
+    try {
+        const res = await fetch(`${API}/inventory`);
+        const data = await res.json();
+        const table = document.getElementById('admin-table');
+        if(!table) return; // Exit if not on admin page
+        
+        table.innerHTML = '';
+        for (const [name, info] of Object.entries(data)) {
+            table.innerHTML += `<tr><td>${name}</td><td>${info.stock}</td><td>$${info.price}</td></tr>`;
+        }
+    } catch (e) { console.log("Table load error", e); }
 }
 
-// Admin: Save Change
 async function saveUpdate() {
     const payload = {
         name: document.getElementById('up-name').value,
@@ -49,4 +73,8 @@ async function saveUpdate() {
         body: JSON.stringify(payload)
     });
     loadAdminTable();
+    // Clear inputs after saving
+    document.getElementById('up-name').value = '';
+    document.getElementById('up-qty').value = '';
+    document.getElementById('up-price').value = '';
 }
