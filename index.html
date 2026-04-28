@@ -1,46 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MEDproject Portal</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="container">
-        <h1>Welcome to MEDproject</h1>
-        <p>Please select your access level:</p>
-        
-        <div class="role-selection">
-            <button onclick="showCustomerView()" class="btn-customer">I am a Customer</button>
-            <button onclick="promptAdmin()" class="btn-admin">I am an Admin</button>
-        </div>
-
-        <div id="admin-login" style="display:none; margin-top: 20px;">
-            <input type="password" id="admin-pass" placeholder="Enter Admin Password">
-            <button onclick="loginAdmin()">Login</button>
-        </div>
+<div class="container">
+    <h1>🏥 MEDproject Portal</h1>
+    <button onclick="location.href='customer.html'">Customer Entry</button>
+    <button class="secondary" onclick="document.getElementById('login').style.display='block'">Admin Login</button>
+    <div id="login" style="display:none">
+        <input type="password" id="admin-pass" placeholder="Password">
+        <button onclick="loginAdmin()">Confirm</button>
     </div>
-
-    <script>
-        function showCustomerView() {
-            window.location.href = "customer.html";
-        }
-
-        function promptAdmin() {
-            document.getElementById('admin-login').style.display = 'block';
-        }
-
-        function loginAdmin() {
-            const pass = document.getElementById('admin-pass').value;
-            // SECURITY: In a real app, this is verified on the backend.
-            // For now, we'll use a simple check to redirect.
-            if (pass === "admin123") { 
-                window.location.href = "admin.html";
-            } else {
-                alert("Incorrect Password!");
-            }
-        }
-    </script>
-</body>
-</html>
+</div>
