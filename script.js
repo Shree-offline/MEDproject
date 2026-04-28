@@ -1,39 +1,52 @@
-// This replaces the Python backend by saving data in your browser's memory
-let stock = JSON.parse(localStorage.getItem('medStock')) || {
-    "Paracetamol": 50,
-    "Amoxicillin": 20
-};
+const API = "/api";
 
-const ADMIN_PASSWORD = "shree123";
+// Portal Login
+async function loginAdmin() {
+    const pass = document.getElementById('admin-pass').value;
+    const res = await fetch(`${API}/admin-login`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({password: pass})
+    });
+    if (res.ok) window.location.href = "admin.html";
+    else alert("Invalid Password");
+}
 
-function restockMedicine() {
-    const password = document.getElementById("admin-pass").value;
-    const name = document.getElementById("admin-med-name").value;
-    const qty = parseInt(document.getElementById("admin-qty").value);
-
-    if (password !== ADMIN_PASSWORD) {
-        alert("Invalid Admin Password!");
-        return;
-    }
-
-    if (name && qty > 0) {
-        stock[name] = (stock[name] || 0) + qty;
-        localStorage.setItem('medStock', JSON.stringify(stock));
-        alert(`Success! ${name} stock is now ${stock[name]}`);
-    } else {
-        alert("Please enter a valid name and quantity.");
+// Customer: Calculate Total
+async function calculateTotal() {
+    const name = document.getElementById('med-select').value;
+    const qty = document.getElementById('buy-qty').value;
+    const res = await fetch(`${API}/inventory`);
+    const data = await res.json();
+    
+    if (data[name]) {
+        const total = data[name].price * qty;
+        document.getElementById('price-display').innerHTML = `Total: $${total.toFixed(2)}`;
     }
 }
 
-function buyMedicine() {
-    const name = document.getElementById("user-med-name").value;
-    const qty = parseInt(document.getElementById("user-qty").value);
-
-    if (stock[name] && stock[name] >= qty) {
-        stock[name] -= qty;
-        localStorage.setItem('medStock', JSON.stringify(stock));
-        alert(`Purchase Successful! Remaining ${name}: ${stock[name]}`);
-    } else {
-        alert(`Stock unavailable! We only have ${stock[name] || 0} units.`);
+// Admin: Load Table
+async function loadAdminTable() {
+    const res = await fetch(`${API}/inventory`);
+    const data = await res.json();
+    const table = document.getElementById('admin-table');
+    table.innerHTML = '';
+    for (const [name, info] of Object.entries(data)) {
+        table.innerHTML += `<tr><td>${name}</td><td>${info.stock}</td><td>$${info.price}</td></tr>`;
     }
+}
+
+// Admin: Save Change
+async function saveUpdate() {
+    const payload = {
+        name: document.getElementById('up-name').value,
+        quantity: document.getElementById('up-qty').value,
+        price: document.getElementById('up-price').value
+    };
+    await fetch(`${API}/update-inventory`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(payload)
+    });
+    loadAdminTable();
 }
