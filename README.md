@@ -56,3 +56,9 @@ Notifications for low stock
 Analytics and reports for admins
 
 <img width="1846" height="850" alt="image" src="https://github.com/user-attachments/assets/b4cb73e5-138a-48f7-915e-81f2270056c5" />
+
+<img width="1787" height="798" alt="image" src="https://github.com/user-attachments/assets/194d8039-bdfd-4919-9002-620f95c3fa30" />
+
+<img width="1840" height="837" alt="image" src="https://github.com/user-attachments/assets/a4b34aed-60e6-4c3f-85e6-01c276521a85" />
+
+
