@@ -3,63 +3,41 @@ from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
 
 app = Flask(__name__, static_url_path='', static_folder='.')
-
-# SECURITY: Use an environment variable for the secret key.
-# On Render, add a 'SECRET_KEY' variable in the dashboard.
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-default-secure-string-123')
-
-# Enable CORS for frontend interaction
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-key-123')
 CORS(app)
 
-# ---------------------------------------------------------
-# ROUTING: SERVING THE UI
-# ---------------------------------------------------------
+# Mock Database with Prices
+inventory_db = {
+    "Paracetamol": {"stock": 50, "price": 5.0},
+    "Amoxicillin": {"stock": 20, "price": 12.5},
+    "Vitamin C": {"stock": 100, "price": 8.0}
+}
 
 @app.route('/')
-def index():
-    return send_from_directory('.', 'index.html')
-
-@app.route('/admin')
-def admin_page():
-    return send_from_directory('.', 'admin.html')
-
-@app.route('/customer')
-def customer_page():
-    return send_from_directory('.', 'customer.html')
-
-# ---------------------------------------------------------
-# API ENDPOINTS
-# ---------------------------------------------------------
+def index(): return send_from_directory('.', 'index.html')
 
 @app.route('/api/inventory', methods=['GET'])
 def get_inventory():
-    # Mock data - in a real app, this would come from a database
-    stock = {
-        "Paracetamol": 50,
-        "Amoxicillin": 20,
-        "Vitamin C": 100
-    }
-    return jsonify(stock)
+    return jsonify(inventory_db)
 
 @app.route('/api/admin-login', methods=['POST'])
 def admin_login():
     data = request.json
-    password = data.get('password')
-    
-    # SECURITY: Compare against an Environment Variable
-    # Set ADMIN_PASSWORD in your Render Dashboard
-    expected_password = os.environ.get('ADMIN_PASSWORD', 'admin123')
-    
-    if password == expected_password:
+    expected = os.environ.get('ADMIN_PASSWORD', 'admin123')
+    if data.get('password') == expected:
         return jsonify({"status": "authorized"}), 200
-    else:
-        return jsonify({"status": "unauthorized"}), 401
+    return jsonify({"status": "unauthorized"}), 401
 
-# ---------------------------------------------------------
-# EXECUTION
-# ---------------------------------------------------------
+@app.route('/api/update-inventory', methods=['POST'])
+def update_inventory():
+    data = request.json
+    name = data.get('name')
+    inventory_db[name] = {
+        "stock": int(data.get('quantity')),
+        "price": float(data.get('price'))
+    }
+    return jsonify({"status": "success"})
 
 if __name__ == "__main__":
-    # Render uses the PORT environment variable. Default to 10000 for local testing.
     port = int(os.environ.get("PORT", 10000))
     app.run(host='0.0.0.0', port=port)
