@@ -1,6 +1,9 @@
 <div class="container">
-    <h2>Medicine Catalog</h2>
-    <div id="inventory-list">
-        </div>
-    <button onclick="location.href='index.html'">Back to Home</button>
+    <h2>Medicine Shop</h2>
+    <input type="text" id="med-select" placeholder="Medicine Name (e.g. Paracetamol)">
+    <input type="number" id="buy-qty" placeholder="Quantity" oninput="calculateTotal()">
+    <div id="price-display" class="price-tag">Total: $0.00</div>
+    <button onclick="alert('Proceeding to Checkout...')">Proceed to Buy</button>
+    <button class="secondary" onclick="location.href='index.html'">Back</button>
 </div>
+<script src="script.js"></script>
