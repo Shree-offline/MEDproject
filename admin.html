@@ -1,10 +1,14 @@
-<div class="container">
-    <h2>Admin Dashboard</h2>
-    <section class="admin-tools">
-        <h3>Update Stock</h3>
-        <input type="text" id="med-name" placeholder="Medicine Name">
-        <input type="number" id="med-qty" placeholder="Quantity">
-        <button onclick="updateStock()">Update Inventory</button>
-    </section>
-    <button onclick="location.href='index.html'">Logout</button>
+<div class="container" style="max-width: 600px;">
+    <h2>Admin Inventory Management</h2>
+    <input type="text" id="up-name" placeholder="Med Name">
+    <input type="number" id="up-qty" placeholder="New Stock">
+    <input type="number" id="up-price" placeholder="New Price">
+    <button onclick="saveUpdate()">Update Item</button>
+    <table>
+        <thead><tr><th>Name</th><th>Stock</th><th>Price</th></tr></thead>
+        <tbody id="admin-table"></tbody>
+    </table>
+    <button class="secondary" onclick="location.href='index.html'">Logout</button>
 </div>
+<script src="script.js"></script>
+<script>loadAdminTable();</script>
