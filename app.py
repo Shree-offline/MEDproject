@@ -2,32 +2,27 @@ import os
 from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
 
-# Use absolute path to ensure Render finds your files
-base_dir = os.path.abspath(os.path.dirname(__file__))
-app = Flask(__name__, static_url_path='', static_folder=base_dir)
+# This version is simplified to prevent "Not Found" errors
+app = Flask(__name__, static_url_path='', static_folder='.')
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-key-123')
 CORS(app)
 
-# Mock Database
+# --- THE DATABASE ---
 inventory_db = {
     "Paracetamol": {"stock": 50, "price": 5.0},
     "Amoxicillin": {"stock": 20, "price": 12.5},
     "Vitamin C": {"stock": 100, "price": 8.0}
 }
 
-# --- IMPROVED ROUTING ---
+# --- ROUTES TO SERVE YOUR PAGES ---
 @app.route('/')
 def index():
-    # This explicitly looks for index.html in the same folder as app.py
-    return send_from_directory(base_dir, 'index.html')
+    return send_from_directory('.', 'index.html')
 
-@app.route('/customer.html')
-def customer_page():
-    return send_from_directory(base_dir, 'customer.html')
-
-@app.route('/admin.html')
-def admin_page():
-    return send_from_directory(base_dir, 'admin.html')
+# This catch-all route helps if you try to visit /customer.html directly
+@app.route('/<path:path>')
+def serve_static(path):
+    return send_from_directory('.', path)
 
 # --- API ENDPOINTS ---
 @app.route('/api/inventory', methods=['GET'])
@@ -46,10 +41,11 @@ def admin_login():
 def update_inventory():
     data = request.json
     name = data.get('name')
-    inventory_db[name] = {
-        "stock": int(data.get('quantity')),
-        "price": float(data.get('price'))
-    }
+    if name:
+        inventory_db[name] = {
+            "stock": int(data.get('quantity', 0)),
+            "price": float(data.get('price', 0))
+        }
     return jsonify({"status": "success"})
 
 if __name__ == "__main__":
